@@ -3,7 +3,6 @@ const CODES = {
   Z: 90,
 }
 
-// eslint-disable-next-line no-unused-vars
 function toCell() {
   return `
     <div class="cell" contenteditable></div>`
@@ -28,7 +27,6 @@ function toChar(_, index) {
 }
 
 export function createTable(rowsCount = 15) {
-  // eslint-disable-next-line no-unused-vars
   const colsCount = CODES.Z - CODES.A + 1
   const rows = []
 
