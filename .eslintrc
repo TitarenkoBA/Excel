@@ -11,7 +11,8 @@
     "require-jsdoc": "off",
     "object-curly-spacing": "off",
     "operator-linebreak": "off",
-    "no-debugger": "off"
+    "no-debugger": "off",
+    "no-array-constructor": "off"
   },
   "extends": ["eslint:recommended", "google"]
 }
