@@ -1,17 +1,22 @@
 import { ExcelComponent } from '@core/ExcelComponent'
 import { createTable } from '@components/table/table.template'
 import { resizeHandler } from '@components/table/table.resize'
-import { shouldResize } from '@components/table/table.functions'
-import { shouldSelect } from '@components/table/table.functions'
-import { $ } from '@core/dom'
+import { navigationHandler } from '@components/table/table.navigation'
+import { selectHandler, selectGroupHandler }
+  from '@components/table/table.select'
+import { shouldResize, shouldSelect, idsMatrix, nextSelector }
+  from '@components/table/table.functions'
 import { TableSelection } from '@components/table/TableSelection'
+import { $ } from '@core/dom'
 
 export class Table extends ExcelComponent {
   static className = 'excel__table'
 
-  constructor($root) {
+  constructor($root, options) {
     super($root, {
-      listeners: ['mousedown'],
+      name: 'Table',
+      listeners: ['mousedown', 'keydown'],
+      ...options,
     })
   }
 
@@ -26,6 +31,15 @@ export class Table extends ExcelComponent {
   init() {
     super.init()
 
+    this.$on('formula:input', text => {
+      this.selection.current.text(text)
+    })
+
+    this.$on('formula:enter', (event) => {
+      event.preventDefault()
+      this.selection.current.focus()
+    })
+
     const $cell = this.$root.find('[data-id="A:1"]')
     this.selection.select($cell)
   }
@@ -34,7 +48,30 @@ export class Table extends ExcelComponent {
     if (shouldResize(event)) {
       resizeHandler(event, this.$root)
     } else if (shouldSelect(event)) {
-      this.selection.select($(event.target))
+      const $target = $(event.target)
+      if (event.shiftKey) {
+        const ids = idsMatrix($target, this.selection.current)
+        selectGroupHandler(ids, this.$root, this.selection)
+      } else {
+        selectHandler($target, this.selection)
+      }
+    }
+  }
+
+  onKeydown(event) {
+    const $target = $(event.target)
+    const {key} = event
+    const keys = [
+      'Tab',
+      'ArrowRight',
+      'Enter',
+      'ArrowDown',
+      'ArrowUp',
+      'ArrowLeft']
+    if (keys.includes(key) && !event.shiftKey) {
+      event.preventDefault()
+      const id = nextSelector($target, key)
+      navigationHandler(id, this.$root, this.selection)
     }
   }
 }
