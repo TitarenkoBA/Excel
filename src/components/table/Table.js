@@ -1,9 +1,6 @@
 import { ExcelComponent } from '@core/ExcelComponent'
 import { createTable } from '@components/table/table.template'
 import { resizeHandler } from '@components/table/table.resize'
-import { navigationHandler } from '@components/table/table.navigation'
-import { selectHandler, selectGroupHandler }
-  from '@components/table/table.select'
 import { shouldResize, shouldSelect, idsMatrix, nextSelector }
   from '@components/table/table.functions'
 import { TableSelection } from '@components/table/TableSelection'
@@ -15,7 +12,7 @@ export class Table extends ExcelComponent {
   constructor($root, options) {
     super($root, {
       name: 'Table',
-      listeners: ['mousedown', 'keydown'],
+      listeners: ['mousedown', 'keydown', 'input'],
       ...options,
     })
   }
@@ -31,17 +28,20 @@ export class Table extends ExcelComponent {
   init() {
     super.init()
 
+    this.selectCell(this.$root.find('[data-id="A:1"]'))
+
     this.$on('formula:input', text => {
       this.selection.current.text(text)
     })
 
-    this.$on('formula:enter', (event) => {
-      event.preventDefault()
+    this.$on('formula:done', () => {
       this.selection.current.focus()
     })
+  }
 
-    const $cell = this.$root.find('[data-id="A:1"]')
+  selectCell($cell) {
     this.selection.select($cell)
+    this.$emit('table:select', $cell)
   }
 
   onMousedown(event) {
@@ -51,9 +51,10 @@ export class Table extends ExcelComponent {
       const $target = $(event.target)
       if (event.shiftKey) {
         const ids = idsMatrix($target, this.selection.current)
-        selectGroupHandler(ids, this.$root, this.selection)
+        const $cells = ids.map((id) => this.$root.find(`[data-id="${id}"]`))
+        this.selection.selectGroup($cells)
       } else {
-        selectHandler($target, this.selection)
+        this.selection.select($target)
       }
     }
   }
@@ -71,7 +72,15 @@ export class Table extends ExcelComponent {
     if (keys.includes(key) && !event.shiftKey) {
       event.preventDefault()
       const id = nextSelector($target, key)
-      navigationHandler(id, this.$root, this.selection)
+      const $next = this.$root.find(`[data-id="${id}"]`)
+      if ($next.$el) {
+        this.selectCell($next)
+      }
     }
+  }
+
+  onInput(event) {
+    const $target = $(event.target)
+    this.$emit('table:input', $target)
   }
 }
