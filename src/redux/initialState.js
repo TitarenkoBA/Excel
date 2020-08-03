@@ -3,6 +3,7 @@ import { clone } from '@core/utils'
 
 const defaultState = {
   title: defaultTitle,
+  date: new Date().toJSON(),
   colState: {},
   rowState: {},
   dataState: {},

@@ -1,11 +1,14 @@
-function toHTML(el) {
-  const date = new Date(+el.slice(6))
+import { storage } from '@core/utils'
+
+function toHTML(key) {
+  const model = storage(key)
+  const id = key.split(':')[1]
   return `
     <li class="db__record">
-      <a href="#${el.replace(':', '/')}">
-        ${JSON.parse(localStorage.getItem(el)).title}
+      <a href="#excel/${id}">
+        ${model.title}
       </a>
-      <strong>${date}</strong>
+      <strong>${new Date(model.date).toLocaleString()}</strong>
     </li>
   `
 }
@@ -30,12 +33,12 @@ export function createRecordsTable() {
   }
 
   return `
-  <div class="db__list-header">
-    <span>Название</span>
-    <span>Дата открытия</span>
-  </div>
-  <ul class="db__list">
-    ${keys.map(toHTML).join('')}
-  </ul>
+    <div class="db__list-header">
+      <span>Название</span>
+      <span>Дата открытия</span>
+    </div>
+    <ul class="db__list">
+      ${keys.map(toHTML).join('')}
+    </ul>
   `
 }

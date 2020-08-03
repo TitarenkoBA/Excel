@@ -2,7 +2,8 @@ import { ExcelComponent } from '@core/ExcelComponent'
 import { $ } from '@core/dom'
 import * as actions from '@/redux/actions'
 import { defaultTitle } from '@/constants'
-import { debounce } from '@core/utils'
+import { debounce, storage } from '@core/utils'
+import { ActiveRoute } from '@core/routes/ActiveRoute'
 
 export class Header extends ExcelComponent {
   static className = 'excel__header'
@@ -46,9 +47,16 @@ export class Header extends ExcelComponent {
   onClick(event) {
     if (event.target.dataset.type) {
       if (event.target.dataset.type === 'exit') {
-        window.location.hash = '#dashboard'
+        const el = storage('excel:' + ActiveRoute.params)
+        el.date = Date.now()
+        storage('excel:' + ActiveRoute.params, el)
+        ActiveRoute.navigate('')
       } else {
-        console.log(window.location.hash.slice(7))
+        const disicion = confirm('Are you sure?')
+        if (disicion) {
+          localStorage.removeItem('excel:' + ActiveRoute.params)
+          ActiveRoute.navigate('')
+        }
       }
     }
   }
