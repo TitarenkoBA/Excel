@@ -2,7 +2,7 @@ import { ExcelComponent } from '@core/ExcelComponent'
 import { $ } from '@core/dom'
 import * as actions from '@/redux/actions'
 import { defaultTitle } from '@/constants'
-import { debounce, storage } from '@core/utils'
+import { debounce } from '@core/utils'
 import { ActiveRoute } from '@core/routes/ActiveRoute'
 
 export class Header extends ExcelComponent {
@@ -45,11 +45,9 @@ export class Header extends ExcelComponent {
   }
 
   onClick(event) {
-    if (event.target.dataset.type) {
-      if (event.target.dataset.type === 'exit') {
-        const el = storage('excel:' + ActiveRoute.params)
-        el.date = Date.now()
-        storage('excel:' + ActiveRoute.params, el)
+    const $target = $(event.target)
+    if ($target.data.type) {
+      if ($target.data.type === 'exit') {
         ActiveRoute.navigate('')
       } else {
         const disicion = confirm('Are you sure?')
