@@ -33,7 +33,7 @@ export class Excel {
 
   init() {
     if (process.env.NODE_ENV === 'production') {
-      document.addEventListener('contextmenu', preventDefault())
+      document.addEventListener('contextmenu', preventDefault)
     }
     this.store.dispatch(updateDate())
     this.subscriber.subscribeComponents(this.components)
@@ -44,7 +44,7 @@ export class Excel {
     this.subscriber.unsubscribeFromStore()
     this.components.forEach( component => component.destroy())
     if (process.env.NODE_ENV === 'production') {
-      document.removeEventListener('contextmenu', preventDefault())
+      document.removeEventListener('contextmenu', preventDefault)
     }
   }
 }
