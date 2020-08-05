@@ -5,8 +5,8 @@ import { shouldResize, shouldSelect, idsMatrix, nextSelector }
   from '@components/table/table.functions'
 import { TableSelection } from '@components/table/TableSelection'
 import { $ } from '@core/dom'
-import * as actions from '@/redux/actions'
-import { defaultStyles } from '@/constants'
+import * as actions from '@root/redux/actions'
+import { defaultStyles } from '@root/constants'
 import { parse } from '@core/parse'
 
 export class Table extends ExcelComponent {

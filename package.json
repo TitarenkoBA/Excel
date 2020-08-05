@@ -4,7 +4,8 @@
   "description": "Pure JavaScript Excel Application",
   "main": "webpack.config.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
+    "test:watch": "jest --watch",
     "start": "cross-env NODE_ENV=development webpack-dev-server --hot",
     "build": "cross-env NODE_ENV=production webpack --mode production",
     "lint": "npx eslint ./src"
@@ -26,6 +27,13 @@
   "homepage": "https://github.com/TitarenkoBA/Excel#readme",
   "private": true,
   "browserslist": "> 0.25%, not dead",
+  "jest": {
+    "moduleNameMapper": {
+      "^@root(.*)$": "<rootDir>/src$1",
+      "^@core(.*)$": "<rootDir>/src/core$1",
+      "^@components(.*)$": "<rootDir>/src/components$1"
+    }
+  },
   "devDependencies": {
     "@babel/core": "^7.10.2",
     "@babel/plugin-proposal-class-properties": "^7.10.1",
@@ -40,6 +48,7 @@
     "eslint-config-google": "^0.14.0",
     "eslint-loader": "^4.0.2",
     "html-webpack-plugin": "^4.3.0",
+    "jest": "^26.2.2",
     "mini-css-extract-plugin": "^0.9.0",
     "node-sass": "^4.14.1",
     "sass-loader": "^8.0.2",
@@ -49,6 +58,7 @@
   },
   "dependencies": {
     "@babel/polyfill": "^7.10.1",
+    "eslint-plugin-jest": "^23.20.0",
     "normalize.css": "^8.0.1"
   }
 }
